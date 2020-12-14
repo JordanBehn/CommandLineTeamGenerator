@@ -31,7 +31,9 @@ const employeeQuestions = [{
     name: 'email',
     message: 'What is employee email?',
 }]
-inquirer.prompt(employeeQuestions).then((data) => {
+
+function createNewEmployee() {
+    inquirer.prompt(employeeQuestions).then((data) => {
         if (data.role === 'Engineer') {
             inquirer.prompt([{
                 type: 'input',
@@ -47,22 +49,61 @@ inquirer.prompt(employeeQuestions).then((data) => {
                     message: 'Would you like to add another employee?'
                 }).then(function(engRerun) {
                     if (engRerun.rerun === 'Input new employee') {
-                        start()
+                        createNewEmployee()
                     } else {
                         createTeam()
                     }
                 })
             })
         }
-
         if (data.role === 'Intern') {
-
+            inquirer.prompt([{
+                type: 'input',
+                name: 'school',
+                message: 'What school does the employee attend?'
+            }]).then(function(intData) {
+                const newIntern = new Intern(data.name, data.id, data.email, intData.school)
+                employeeList.push(newIntern)
+                inquirer.prompt({
+                    type: 'list',
+                    name: 'rerun',
+                    choices: ['Input new employee', 'End'],
+                    message: 'Would you like to add another employee?'
+                }).then(function(intRerun) {
+                    if (intRerun.rerun === 'Input new employee') {
+                        createNewEmployee()
+                    } else {
+                        createTeam()
+                    }
+                })
+            })
         }
-
         if (data.role === 'Manager') {
-
+            inquirer.prompt([{
+                type: 'input',
+                name: 'office',
+                message: 'What is employee office number?'
+            }]).then(function(manData) {
+                const newManager = new Manager(data.name, data.id, data.email, manData.office)
+                employeeList.push(newManager)
+                inquirer.prompt({
+                    type: 'list',
+                    name: 'rerun',
+                    choices: ['Input new employee', 'End'],
+                    message: 'Would you like to add another employee?'
+                }).then(function(engRerun) {
+                    if (engRerun.rerun === 'Input new employee') {
+                        createNewEmployee()
+                    } else {
+                        createTeam()
+                    }
+                })
+            })
         }
     })
+}
+
+createNewEmployee()
     // After the user has input all employees desired, call the `render` function (required
     // above) and pass in an array containing all employee objects; the `render` function will
     // generate and return a block of HTML including templated divs for each employee!
