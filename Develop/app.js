@@ -91,8 +91,8 @@ function createNewEmployee() {
                     name: 'rerun',
                     choices: ['Input new employee', 'End'],
                     message: 'Would you like to add another employee?'
-                }).then(function(engRerun) {
-                    if (engRerun.rerun === 'Input new employee') {
+                }).then(function(manRerun) {
+                    if (manRerun.rerun === 'Input new employee') {
                         createNewEmployee()
                     } else {
                         createTeam()
