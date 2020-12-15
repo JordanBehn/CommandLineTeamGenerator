@@ -10,29 +10,30 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
+//instantiate empy array of employ objects
 const employeeList = [];
+//instantiate list of employee questions
 const employeeQuestions = [{
-    type: 'input',
-    name: 'name',
-    message: 'What is employee name?',
-}, {
-    type: 'input',
-    name: 'id',
-    message: 'What is employee id?',
-}, {
-    type: 'list',
-    name: 'role',
-    message: 'What is employee role?',
-    choices: ['Engineer', 'Intern', 'Manager']
-}, {
-    type: 'input',
-    name: 'email',
-    message: 'What is employee email?',
-}]
-
+        type: 'input',
+        name: 'name',
+        message: 'What is employee name?',
+    }, {
+        type: 'input',
+        name: 'id',
+        message: 'What is employee id?',
+    }, {
+        type: 'list',
+        name: 'role',
+        message: 'What is employee role?',
+        choices: ['Engineer', 'Intern', 'Manager']
+    }, {
+        type: 'input',
+        name: 'email',
+        message: 'What is employee email?',
+    }]
+    //function to create new employee objects
 function createNewEmployee() {
+    //inquirer prompt that asks different question depending on employee role
     inquirer.prompt(employeeQuestions).then((data) => {
         if (data.role === 'Engineer') {
             inquirer.prompt([{
@@ -40,6 +41,7 @@ function createNewEmployee() {
                 name: 'github',
                 message: 'What is employee github ?'
             }]).then(function(engData) {
+                //creates new employee object of designated role, push it to employeeList array
                 const newEngineer = new Engineer(data.name, data.id, data.email, engData.github)
                 employeeList.push(newEngineer)
                 inquirer.prompt({
@@ -48,9 +50,11 @@ function createNewEmployee() {
                     choices: ['Input new employee', 'End'],
                     message: 'Would you like to add another employee?'
                 }).then(function(engRerun) {
+                    //run createNewEmployee again if desired
                     if (engRerun.rerun === 'Input new employee') {
                         createNewEmployee()
                     } else {
+                        //run renderTeam when list is complete
                         renderTeam()
                     }
                 })
@@ -102,27 +106,14 @@ function createNewEmployee() {
         }
     })
 }
-
-createNewEmployee()
-    // After the user has input all employees desired, call the `render` function (required
-    // above) and pass in an array containing all employee objects; the `render` function will
-    // generate and return a block of HTML including templated divs for each employee!
+/*creates renderTeam function. It runs htmlRenderer on the completed employee list and 
+converts it to html and writes it to a file*/
 function renderTeam() {
     const employeehtml = render(employeeList)
-    fs.writeFile(outputPath, employeehtml, function() {})
+    fs.writeFile(outputPath, employeehtml, function() {
+        console.log("wrote list to file!")
+    })
 }
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
 
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
+//call createNewEmployee function
+createNewEmployee()
