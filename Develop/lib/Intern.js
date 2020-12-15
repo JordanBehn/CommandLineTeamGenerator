@@ -6,8 +6,8 @@ class Intern extends Employee {
         super(name, id, email)
         this.school = school
     }
-    getGithub() {
-        return this.github
+    getSchool() {
+        return this.school
     }
     getRole() {
         return 'Intern'

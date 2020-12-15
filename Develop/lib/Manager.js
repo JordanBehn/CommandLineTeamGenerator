@@ -6,8 +6,8 @@ class Manager extends Employee {
         super(name, id, email)
         this.office = office
     }
-    getGithub() {
-        return this.github
+    getOfficeNumber() {
+        return this.office
     }
     getRole() {
         return 'Manager'
